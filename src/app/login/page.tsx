@@ -6,43 +6,11 @@ import { useAuth } from '@/context/AuthContext';
 import {
   Lock, User, ArrowRight, ShieldCheck, AlertCircle,
   Eye, EyeOff, ShieldAlert, KeyRound, CheckCircle2,
-  Info, ChevronDown, ChevronUp, UserCheck, Key
+  Info, Key
 } from 'lucide-react';
 
 const MAX_ATTEMPTS = 5;
 const LOCKOUT_SECONDS = 60;
-
-// Daftar akun resmi yang tersedia
-const AVAILABLE_ACCOUNTS = [
-  {
-    role: 'Admin',
-    label: 'Administrator Sistem',
-    username: 'admin',
-    name: 'Sahabat Administrator',
-    color: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border-emerald-300',
-  },
-  {
-    role: 'Ketua',
-    label: 'Ketua PW GP Ansor',
-    username: 'ketua_pw',
-    name: 'H. SUBHAN FAHMI',
-    color: 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 border-amber-300',
-  },
-  {
-    role: 'Sekretaris',
-    label: 'Sekretaris PW',
-    username: 'sekretaris_pw',
-    name: 'H. EDI RUSYANDI',
-    color: 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 border-blue-300',
-  },
-  {
-    role: 'Operator',
-    label: 'Tata Usaha / Operator',
-    username: 'staf_tu',
-    name: 'Sahabat M. Rifki Fauzi',
-    color: 'bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300 border-purple-300',
-  },
-];
 
 export default function LoginPage() {
   const router = useRouter();
@@ -55,7 +23,6 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [notice, setNotice] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [showAccountList, setShowAccountList] = useState(false);
 
   // Security & Rate Limiting states
   const [failedAttempts, setFailedAttempts] = useState(0);
@@ -128,13 +95,6 @@ export default function LoginPage() {
 
     return () => clearInterval(timer);
   }, [lockoutTime]);
-
-  const handleSelectAccount = (accUsername: string) => {
-    setUsername(accUsername);
-    setPassword('password123');
-    setError('');
-    setNotice(null);
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -366,58 +326,6 @@ export default function LoginPage() {
               )}
             </button>
           </form>
-
-          {/* Quick Account Selector / Information */}
-          <div className="pt-2 border-t border-gray-100 dark:border-zinc-800">
-            <button
-              type="button"
-              onClick={() => setShowAccountList(!showAccountList)}
-              className="w-full flex items-center justify-between text-[11px] font-bold text-emerald-700 dark:text-emerald-400 hover:underline py-1"
-            >
-              <span className="flex items-center gap-1.5">
-                <UserCheck className="w-3.5 h-3.5" />
-                <span>Pilihan Akun Resmi untuk Masuk</span>
-              </span>
-              {showAccountList ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-            </button>
-
-            {showAccountList && (
-              <div className="mt-2 space-y-1.5 bg-gray-50 dark:bg-zinc-800/60 p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 text-xs animate-in fade-in">
-                <p className="text-[10px] text-gray-500 dark:text-gray-400 mb-1.5">
-                  Klik salah satu akun di bawah untuk mengisi username & kata sandi secara otomatis:
-                </p>
-                <div className="grid grid-cols-1 gap-1.5">
-                  {AVAILABLE_ACCOUNTS.map((acc) => (
-                    <button
-                      key={acc.username}
-                      type="button"
-                      onClick={() => handleSelectAccount(acc.username)}
-                      className="flex items-center justify-between p-2 rounded-lg bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 hover:border-emerald-500 hover:bg-emerald-50/40 dark:hover:bg-emerald-950/20 text-left transition-all group cursor-pointer"
-                    >
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-1.5">
-                          <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded-full border ${acc.color}`}>
-                            {acc.role}
-                          </span>
-                          <span className="font-bold text-gray-900 dark:text-white text-[11px] truncate">
-                            {acc.name}
-                          </span>
-                        </div>
-                        <div className="text-[10px] text-gray-500 mt-0.5 flex items-center gap-2">
-                          <span>User: <strong className="font-mono text-emerald-700 dark:text-emerald-400">{acc.username}</strong></span>
-                          <span>•</span>
-                          <span>Sandi: <strong className="font-mono">password123</strong></span>
-                        </div>
-                      </div>
-                      <span className="text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-                        Pilih
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
 
           {/* Security Assurance Badges */}
           <div className="pt-1 flex items-center justify-center gap-3 text-[10px] text-gray-500 dark:text-gray-400 font-medium">
